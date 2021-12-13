@@ -1,0 +1,43 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python27:
+      python.version: '2.7'
+    Python35:
+      python.version: '3.5'
+    Python36:
+      python.version: '3.6'
+    Python37:
+      python.version: '3.7'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- script: |
+    pip install pytest pytest-azurepipelines
+    pytest
+  displayName: 'pytest'
+
+- script: |
+    pip install azure-storage-blob
+    from azure.storage.blob import BlobClien
+    sas_url = "https://dlsdatatestpdev3.blob.core.windows.net/prueba-devops/ejemplo.txt?sp=racwdymeop&st=2021-12-13T08:10:28Z&se=2021-12-13T16:10:28Z&spr=https&sv=2020-08-04&sr=b&sig=RpxbY48tmEk48sw%2Fr7NGkNbulrkwXegF1j0%2FzqC3xd4%3D"
+    blob_client = BlobClient.from_blob_url(sas_url)
+  displayName: : 'Devops-datalake'
