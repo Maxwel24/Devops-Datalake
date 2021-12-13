@@ -1,0 +1,6 @@
+pip install azure-storage-blob
+from azure.storage.blob import BlobClient
+
+sas_url = "https://dlsdatatestpdev3.blob.core.windows.net/prueba-devops/ejemplo.txt?sp=racwdymeop&st=2021-12-13T08:10:28Z&se=2021-12-13T16:10:28Z&spr=https&sv=2020-08-04&sr=b&sig=RpxbY48tmEk48sw%2Fr7NGkNbulrkwXegF1j0%2FzqC3xd4%3D"
+blob_client = BlobClient.from_blob_url(sas_url)
+blob_dowload = blob_client.download_blob()
